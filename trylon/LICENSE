@@ -1,0 +1,39 @@
+BUSINESS SOURCE LICENSE 1.1
+
+TERMS
+
+The Licensed Work is the code specified in the NOTICE file.
+
+Licensor: Trylon AI, Inc.
+
+Licensed Work: Trylon Core
+
+Additional Use Grant: 
+
+Use Limitation: You may not use the Licensed Work for production purposes if you are providing a software-as-a-service (SaaS) offering that utilizes the Licensed Work to supply large language model (LLM) security guardrail capabilities to third parties, and this offering competes directly with Trylon AI's commercial cloud services.
+
+Change Date: 2028-04-03
+
+Change License: Apache License, Version 2.0
+
+For the avoidance of doubt, redistribution of the Licensed Work is permitted only under the terms of this License.
+
+License:
+
+Subject to the terms of this License, the Licensor grants you a non-exclusive, worldwide, non-sublicensable, non-transferable license to use, reproduce, display, perform, modify, prepare derivative works of, and distribute the Licensed Work, provided that such use does not violate the Use Limitation.
+
+On the Change Date, the rights granted to you in the paragraph above automatically convert to the terms of the Change License, without any additional action by you.
+
+You must conspicuously display this License in the Licensed Work itself or based on the requirements of the Change License when the change happens.
+
+Trademarks:
+
+This license does not grant you any rights in the trademarks, service marks, or logos of the Licensor (the “Licensor Marks”). You will not use the Licensor Marks in any way that might state or imply that the Licensed Work is endorsed by the Licensor.
+
+Warranty Disclaimer:
+
+THE LICENSED WORK IS PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING, WITHOUT LIMITATION, ANY WARRANTY OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. YOU ARE SOLELY RESPONSIBLE FOR DETERMINING THE APPROPRIATENESS OF USING OR REDISTRIBUTING THE LICENSED WORK AND ASSUME ANY RISKS ASSOCIATED WITH YOUR EXERCISE OF PERMISSIONS UNDER THIS LICENSE.
+
+Limitation of Liability:
+
+UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE LICENSOR BE LIABLE TO YOU FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER COMMERCIAL DAMAGES OR LOSSES, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES.

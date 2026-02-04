@@ -1,0 +1,40 @@
+# NeMo Guardrails Configuration
+# Simple keyword-based detection (no LLM required)
+
+models:
+  - type: main
+    engine: openai
+    model: gpt-3.5-turbo
+
+rails:
+  input:
+    flows:
+      - self check input
+
+  output:
+    flows:
+      - self check output
+
+# Input rail to detect malicious patterns
+define flow self check input:
+  $allowed = execute check_input_safety
+
+  if not $allowed:
+    bot refuse
+
+# Output rail to check responses
+define flow self check output:
+  $allowed = execute check_output_safety
+
+  if not $allowed:
+    bot refuse
+
+# Define bot refusal message
+define bot refuse:
+  "I'm sorry, I can't process that request. It appears to contain potentially harmful content."
+
+define bot refuse prompt injection:
+  "I'm sorry, I can't respond to that. This appears to be a prompt injection attempt."
+
+define bot refuse malicious:
+  "I'm sorry, I cannot assist with that request as it violates our policies."

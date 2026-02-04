@@ -1,0 +1,122 @@
+services:
+  # Ollama - LLM Backend
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    # Note: removed container-local curl-based healthcheck because the
+    # official `ollama/ollama` image does not include `curl` in PATH.
+    # Leaving the service without an internal healthcheck avoids the
+    # container being flagged 'unhealthy' due to the missing binary.
+    # If you prefer a healthcheck, either install curl in a custom image
+    # or replace this with a command available in the image.
+    networks:
+      - firewall_net
+
+  # Trylon Gateway - Open-source LLM firewall with policy enforcement
+  trylon:
+    image: trylon-gateway:latest
+    container_name: trylon
+    ports:
+      - "8080:8000"  # Trylon runs on port 8000 internally
+    volumes:
+      - ./trylon/policies.yaml:/app/policies.yaml
+      - trylon_hf_cache:/app/.cache/huggingface
+    environment:
+      - PORT=8000
+      - ENVIRONMENT=production
+      - LOG_LEVEL=20  # 10=DEBUG, 20=INFO, 30=WARNING
+      - POLICIES_FILE_PATH=/app/policies.yaml
+      - HF_HOME=/app/.cache/huggingface
+    depends_on:
+      ollama:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - firewall_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s  # Give time for model downloads
+
+  # Benchmark Runner
+  benchmark:
+    build: 
+      context: ./benchmark
+      dockerfile: Dockerfile
+    container_name: benchmark
+    volumes:
+      - ./benchmark:/app
+      - ./results:/app/results
+      - huggingface_cache:/root/.cache/huggingface
+    environment:
+      - OLLAMA_URL=http://ollama:11434
+      - CHROMADB_URL=http://chromadb:8000
+      - TRYLON_URL=http://trylon:8080
+      - CUDA_VISIBLE_DEVICES=0
+      - TRANSFORMERS_CACHE=/root/.cache/huggingface
+      - HF_HOME=/root/.cache/huggingface
+      # API Keys (optional - loaded from .env)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - REBUFF_API_KEY=${REBUFF_API_KEY:-}
+      - HF_TOKEN=${HF_TOKEN:-}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      - ollama
+      - chromadb
+      - trylon
+    stdin_open: true
+    tty: true
+    networks:
+      - firewall_net
+    # Override command to keep container running
+    command: tail -f /dev/null
+
+  # ChromaDB - Vector database for Rebuff attack pattern matching
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=False
+    networks:
+      - firewall_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ollama_data:
+  huggingface_cache:
+  chromadb_data:
+  trylon_hf_cache:
+
+networks:
+  firewall_net:
+    name: firewall_benchmark_net
+    driver: bridge
