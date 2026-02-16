@@ -510,18 +510,3 @@ This tool is for **defensive security research** only:
 ❌ Bypassing safety measures  
 ❌ Malicious use  
 
-**Use responsibly.**
-
----
-
-## 📞 Support
-
-Issues? Questions?
-
-1. Check **Troubleshooting** section above
-2. Review logs: `docker logs benchmark`
-3. Open a GitHub issue
-
----
-
-**Built with ❤️ for LLM Security Research**
